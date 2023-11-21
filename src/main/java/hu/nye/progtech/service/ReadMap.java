@@ -2,7 +2,7 @@ package hu.nye.progtech.service;
 
 import hu.nye.progtech.model.Direction;
 import hu.nye.progtech.model.Hero;
-import hu.nye.progtech.model.Map;
+import hu.nye.progtech.model.MapVO;
 import hu.nye.progtech.model.ObjectType;
 
 import java.io.*;
@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class ReadMap {
 
-    private final Map inputMap;
+    private final MapVO inputMapVO;
     public ReadMap() throws IOException {
         File file = new File("wumpluszinput.txt");
         Scanner scanner = new Scanner(file);
@@ -49,7 +49,7 @@ public class ReadMap {
         System.out.println(hero);
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if((i == hero.getCoordinate_x()-1) && (j == hero.getCoordinate_y()-1)){
+                if((i == hero.getCoordinate_y()-1) && (j == hero.getCoordinate_x()-1)){
                     if(scannedMap[i][j]!='_'){
                         System.out.println("Hibás koordináta!");
                     }else{
@@ -58,11 +58,11 @@ public class ReadMap {
                 }
             }
         }
-        inputMap = new Map(N,N,scannedMap);
+        inputMapVO = new MapVO(N,N,scannedMap);
         scanner.close();
     }
 
     public void printReadMap() {
-        inputMap.mapPrint();
+        inputMapVO.mapPrint();
     }
 }
