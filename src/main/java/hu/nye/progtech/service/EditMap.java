@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class EditMap {
 
     Hero editedHero;
+    int size;
 
     public EditMap() throws IOException {
         readSize();
@@ -18,7 +19,7 @@ public class EditMap {
 
     public void readSize() throws IOException{
         Scanner scanner = new Scanner(System.in);
-        int size=0;
+        size=0;
         while(!sizeCheck(size)){
             System.out.println("Adja meg a pálya méretét (6<=N<=20): ");
             size = scanner.nextInt();
@@ -26,7 +27,6 @@ public class EditMap {
                 MapVO empty = emptyMap(size);
                 empty.mapPrint();
                 menu(empty);
-                scanner.close();
             }
             else{
                 System.out.println("Hiba! Próbálja újra!");
@@ -245,7 +245,7 @@ public class EditMap {
     }
 
     public boolean checkAddObject(MapVO map, Object object){
-        if(object.getCoordinate_x()>map.getRows() || object.getCoordinate_y()> map.getColumns()){
+        if(object.getCoordinate_y()>map.getRows() || object.getCoordinate_x()> map.getColumns()){
             System.out.println("\nHiba! A pálya "+map.getRows()+"x"+map.getRows()+" méretű!");
             return false;
         }
@@ -265,7 +265,7 @@ public class EditMap {
             return false;
         }
 
-        if(map.getMap()[object.getCoordinate_y()-1][object.getCoordinate_x()-1]!='_'){
+        if(map.getMap()[object.getCoordinate_x()-1][object.getCoordinate_y()-1]!='_'){
             System.out.println("\nHiba! Az adott helyen van már elem!\n");
             return false;
         }
@@ -278,23 +278,23 @@ public class EditMap {
             char[][] newMap= map.getMap();
                 switch (object.getType()){
                     case GOLD:
-                        newMap[object.getCoordinate_y()-1][object.getCoordinate_x()-1]='G';
+                        newMap[object.getCoordinate_x()-1][object.getCoordinate_y()-1]='G';
                         break;
                     case HERO:
-                        newMap[object.getCoordinate_y()-1][object.getCoordinate_x()-1]='H';
+                        newMap[object.getCoordinate_x()-1][object.getCoordinate_y()-1]='H';
 
                         Direction direction = heroDirectionRead();
                         int numberOfArrows = wumpusCount(map);
-                        editedHero=new Hero(object.getType(), object.getCoordinate_x(), object.getCoordinate_y(), direction, numberOfArrows);
+                        editedHero=new Hero(object.getCoordinate_y(), object.getCoordinate_x(), direction, numberOfArrows, false);
                         break;
                     case WALL:
-                        newMap[object.getCoordinate_y()-1][object.getCoordinate_x()-1]='W';
+                        newMap[object.getCoordinate_x()-1][object.getCoordinate_y()-1]='W';
                         break;
                     case PIT:
-                        newMap[object.getCoordinate_y()-1][object.getCoordinate_x()-1]='P';
+                        newMap[object.getCoordinate_x()-1][object.getCoordinate_y()-1]='P';
                         break;
                     case WUMPUS:
-                        newMap[object.getCoordinate_y()-1][object.getCoordinate_x()-1]='U';
+                        newMap[object.getCoordinate_x()-1][object.getCoordinate_y()-1]='U';
                         break;
                 }
             return new MapVO(map.getRows(), map.getColumns(), newMap);

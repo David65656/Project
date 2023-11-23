@@ -45,11 +45,11 @@ public class ReadMap {
             }
         }
 
-        Hero hero = new Hero(ObjectType.HERO, heroRow, heroColumn, heroDirection, cnt);
+        Hero hero = new Hero(heroRow, heroColumn, heroDirection, cnt,false);
         System.out.println(hero);
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
-                if((i == hero.getCoordinate_y()-1) && (j == hero.getCoordinate_x()-1)){
+                if((i == hero.getCoordinate_x()-1) && (j == hero.getCoordinate_y()-1)){
                     if(scannedMap[i][j]!='_'){
                         System.out.println("Hibás koordináta!");
                     }else{

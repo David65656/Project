@@ -5,14 +5,8 @@ public class Object {
     protected int coordinate_y;
     protected int coordinate_x;
 
-    public Object(ObjectType type, int coordinate_y, int coordinate_x) {
+    public Object(ObjectType type, int coordinate_x, int coordinate_y) {
         this.type = type;
-        this.coordinate_y = coordinate_y;
-        this.coordinate_x = coordinate_x;
-    }
-
-    protected Object(int coordinate_y, int coordinate_x) {
-        this.type = ObjectType.HERO;
         this.coordinate_y = coordinate_y;
         this.coordinate_x = coordinate_x;
     }
@@ -21,16 +15,16 @@ public class Object {
         return type;
     }
 
-    public int getCoordinate_y() {
-        return coordinate_y;
+    public int getCoordinate_x() {
+        return coordinate_x;
     }
 
     public void setCoordinate_y(int coordinate_y) {
         this.coordinate_y = coordinate_y;
     }
 
-    public int getCoordinate_x() {
-        return coordinate_x;
+    public int getCoordinate_y() {
+        return coordinate_y;
     }
 
     public void setCoordinate_x(int coordinate_x) {
