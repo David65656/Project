@@ -11,25 +11,38 @@ import java.util.Scanner;
 
 public class Play {
     MapVO playedMap;
-    Hero playedHero;
+    Hero playedHero=new Hero(0,0,Direction.North,0,false);
     int heroStartCoordinate_x;
     int heroStartCoordinate_y;
     public Play() throws IOException {
-        //EditMap editMap = new EditMap();
-        playedHero=new Hero(5,2, Direction.North,1,false);
-        int size = 6;
-        playedMap=readSavedMap(size);
-
-        heroStartCoordinate_x= playedHero.getCoordinate_x();
-        heroStartCoordinate_y= playedHero.getCoordinate_y();
-
+        new EditMap();
+        playedMap=readSavedMap();
         playMenu();
-
     }
 
-    public MapVO readSavedMap(int size) throws FileNotFoundException {
+    public MapVO readSavedMap() throws FileNotFoundException {
         File file = new File("savedMap.txt");
         Scanner scanner = new Scanner(file);
+
+        int cnt=0;
+        Direction heroDirection = null;
+
+        int size = scanner.nextInt();
+        playedHero.setCoordinate_y(scanner.next().charAt(0)-64);
+        playedHero.setCoordinate_x(scanner.nextInt());
+
+        String direction = scanner.next();
+        if(direction.equals("North")){
+            heroDirection = Direction.North;
+        } else if (direction.equals("South")) {
+            heroDirection = Direction.South;
+        } else if (direction.equals("East")){
+            heroDirection = Direction.East;
+        } else if (direction.equals("West")){
+            heroDirection = Direction.West;
+        }
+
+        playedHero.setViewingDirection(heroDirection);
 
         char[][] scannedMap = new char[size][size];
         for (int i = 0; i < size; i++) {
@@ -39,7 +52,22 @@ public class Play {
             }
         }
         playedMap = new MapVO(size,size,scannedMap);
+        setHeroArrowNumber();
+        heroStartCoordinate_x= playedHero.getCoordinate_x();
+        heroStartCoordinate_y= playedHero.getCoordinate_y();
         return playedMap;
+    }
+
+    public void setHeroArrowNumber(){
+        int cnt=0;
+        for (int i = 0; i < playedMap.getRows(); i++) {
+            for (int j = 0; j < playedMap.getColumns(); j++) {
+                if(playedMap.getMap()[i][j]=='U'){
+                    cnt++;
+                }
+            }
+        }
+        playedHero.setNumberOfArrows(cnt);
     }
 
     public void printMenu(){
@@ -86,7 +114,12 @@ public class Play {
                         move.turnRight(playedHero);
                         break;
                     case 4:
-                        playedMap=move.shoot(playedHero, playedMap);
+                        if(playedHero.getNumberOfArrows()==0){
+                            System.out.println("\nNincs nyilad, ezért nem tudsz lőni!\n");
+                        }
+                        else{
+                            playedMap=move.shoot(playedHero, playedMap);
+                        }
                         break;
                     case 5:
                         move.pickupGold(playedHero, playedMap);

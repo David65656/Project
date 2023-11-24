@@ -11,7 +11,6 @@ public class HeroMovements {
     int oldCoordinate_x;
     int oldCoordinate_y;
     Object object=new Object(ObjectType.WALL,0,0);
-    Object shotObject;
     public Hero step(Hero hero, MapVO map) {
         int newCoordinate_x=hero.getCoordinate_x();
         int newCoordinate_y=hero.getCoordinate_y();
@@ -141,6 +140,10 @@ public class HeroMovements {
             else {
                 newCoordinate_y++;
             }
+        }
+
+        if(hero.getNumberOfArrows()>0){
+            hero.setNumberOfArrows(hero.getNumberOfArrows()-1);
         }
 
         if(checkShotField(map,newCoordinate_x,newCoordinate_y)=='W'){

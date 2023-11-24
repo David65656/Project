@@ -91,8 +91,11 @@ public class EditMap {
 
     public void saveMap(MapVO map) throws IOException {
             BufferedWriter writer = new BufferedWriter(new FileWriter("savedMap.txt"));
-            char[][] savedMap = map.getMap();
 
+            writer.write(size + " " + (char)(editedHero.getCoordinate_y()+64) + " " + editedHero.getCoordinate_x() + " " + editedHero.getViewingDirection());
+            writer.newLine();
+
+            char[][] savedMap = map.getMap();
             for (int i = 0; i < map.getRows(); i++) {
                 for (int j = 0; j < map.getColumns(); j++) {
                     writer.write(savedMap[i][j]);
