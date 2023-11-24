@@ -10,18 +10,22 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class Play {
-
     MapVO playedMap;
     Hero playedHero;
+    int heroStartCoordinate_x;
+    int heroStartCoordinate_y;
     public Play() throws IOException {
         //EditMap editMap = new EditMap();
         playedHero=new Hero(5,2, Direction.North,1,false);
         int size = 6;
         playedMap=readSavedMap(size);
+
+        heroStartCoordinate_x= playedHero.getCoordinate_x();
+        heroStartCoordinate_y= playedHero.getCoordinate_y();
+
         playMenu();
 
     }
-
 
     public MapVO readSavedMap(int size) throws FileNotFoundException {
         File file = new File("savedMap.txt");
@@ -45,9 +49,13 @@ public class Play {
                 "3. Jobbra fordulás\n" +
                 "4. Lövés\n" +
                 "5. Arany felszedése\n" +
-                "6. Mentés és kilépés\n" +
-                "7. Kilépés mentés nélkül\n" +
+                "6. Játék elhalasztás\n" +
+                "7. Feladás\n" +
                 "Ön választása: ");
+    }
+
+    public boolean checkHeroPosition(){
+        return heroStartCoordinate_x == playedHero.getCoordinate_x() && heroStartCoordinate_y == playedHero.getCoordinate_y();
     }
 
     public void playMenu() {
@@ -56,11 +64,16 @@ public class Play {
         int choice = 0;
 
         while (choice != 7) {
-            playedMap.mapPrint();
-            System.out.println(playedHero);
-            printMenu();
-            choice = scanner.nextInt();
-
+            if(checkHeroPosition() && playedHero.isHaveGold()){
+                System.out.println("\nGratulálok! Megnyerted a játékot!\n");
+                choice=7;
+            }
+            else{
+                playedMap.mapPrint();
+                System.out.println(playedHero);
+                printMenu();
+                choice = scanner.nextInt();
+            }
                 switch (choice) {
                     case 1:
                         playedHero=move.step(playedHero,playedMap);
@@ -73,7 +86,7 @@ public class Play {
                         move.turnRight(playedHero);
                         break;
                     case 4:
-                        move.shoot(playedHero, playedMap);
+                        playedMap=move.shoot(playedHero, playedMap);
                         break;
                     case 5:
                         move.pickupGold(playedHero, playedMap);

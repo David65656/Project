@@ -10,7 +10,8 @@ public class HeroMovements {
 
     int oldCoordinate_x;
     int oldCoordinate_y;
-    Object object;
+    Object object=new Object(ObjectType.WALL,0,0);
+    Object shotObject;
     public Hero step(Hero hero, MapVO map) {
         int newCoordinate_x=hero.getCoordinate_x();
         int newCoordinate_y=hero.getCoordinate_y();
@@ -118,8 +119,50 @@ public class HeroMovements {
         }
     }
 
-    public void shoot(Hero hero, MapVO map){
+    public MapVO shoot(Hero hero, MapVO map){
+        int newCoordinate_x=hero.getCoordinate_x();
+        int newCoordinate_y=hero.getCoordinate_y();
 
+
+        while((map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1] != 'W') && (map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1] != 'U')){
+            if(hero.getViewingDirection()==Direction.North){
+                newCoordinate_x--;
+            }
+
+            else if (hero.getViewingDirection()==Direction.South) {
+                newCoordinate_x++;
+
+            }
+
+            else if (hero.getViewingDirection()==Direction.West) {
+                newCoordinate_y--;
+            }
+
+            else {
+                newCoordinate_y++;
+            }
+        }
+
+        if(checkShotField(map,newCoordinate_x,newCoordinate_y)=='W'){
+            return map;
+        } else if (checkShotField(map,newCoordinate_x,newCoordinate_y)=='U') {
+            char[][] newMap = map.getMap();
+            newMap[newCoordinate_x-1][newCoordinate_y-1]='_';
+            return new MapVO(map.getRows(), map.getColumns(), newMap);
+        }
+        else {
+            return map;
+        }
+    }
+
+    public char checkShotField(MapVO map, int newCoordinate_x, int newCoordinate_y){
+        if (map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1] == 'U') {
+            System.out.println("\nEltaláltad a wumpuszt! A wumpusz meghalt!\n");
+        } else if (map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1] == 'W') {
+            System.out.println("\nA lövés sikertelen! A nyíl nem talált!\n");
+        }
+
+        return map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1];
     }
 
     public void pickupGold(Hero hero, MapVO map){
