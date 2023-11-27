@@ -1,47 +1,83 @@
 package hu.nye.progtech.service;
 
-import hu.nye.progtech.model.Direction;
-import hu.nye.progtech.model.Hero;
-import hu.nye.progtech.model.MapVO;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import hu.nye.progtech.model.Hero;
+import hu.nye.progtech.model.MapVO;
+
+/**
+ * The Play class represents the gameplay logic, allowing the player to interact with the game.
+ */
 public class Play {
     private MapVO playedMap;
     private Hero playedHero;
-    private final int heroStartCoordinate_x;
-    private final int heroStartCoordinate_y;
+    private final int heroStartCoordinateX;
+    private final int heroStartCoordinateY;
+
+    /**
+     * Constructs a Play object with the given MapVO and Hero, starting the game.
+     *
+     * @param playedMap The MapVO object representing the game map.
+     * @param playedHero The Hero object representing the player.
+     * @throws SQLException If a database access error occurs.
+     * @throws IOException  If an I/O error occurs.
+     */
     public Play(MapVO playedMap, Hero playedHero) throws SQLException, IOException {
         this.playedMap = playedMap;
         this.playedHero = playedHero;
 
-        heroStartCoordinate_x = playedHero.getCoordinate_x();
-        heroStartCoordinate_y = playedHero.getCoordinate_y();
+        heroStartCoordinateX = playedHero.getCoordinateX();
+        heroStartCoordinateY = playedHero.getCoordinateY();
         setHeroOnMap();
         setHeroArrowNumber();
 
         playMenu();
     }
 
-    public void setHeroOnMap(){
+    /**
+     * Constructs a Play object with the given MapVO, Hero, and initial hero coordinates, starting the game.
+     *
+     * @param playedMap The MapVO object representing the game map.
+     * @param playedHero The Hero object representing the player.
+     * @param heroStartCoordinateX The initial x-coordinate of the hero.
+     * @param heroStartCoordinateY The initial y-coordinate of the hero.
+     * @throws SQLException If a database access error occurs.
+     * @throws IOException  If an I/O error occurs.
+     */
+    public Play(MapVO playedMap, Hero playedHero, int heroStartCoordinateX, int heroStartCoordinateY) throws SQLException, IOException {
+        this.playedMap = playedMap;
+        this.playedHero = playedHero;
+
+        this.heroStartCoordinateX = heroStartCoordinateX;
+        this.heroStartCoordinateY = heroStartCoordinateY;
+        setHeroOnMap();
+
+        playMenu();
+    }
+
+    /**
+     * Sets the hero on the map based on the initial coordinates.
+     */
+    public void setHeroOnMap() {
         for (int i = 0; i < playedMap.getRows(); i++) {
             for (int j = 0; j < playedMap.getColumns(); j++) {
-                if((i == playedHero.getCoordinate_x()-1) && (j == playedHero.getCoordinate_y()-1)){
-                    playedMap.getMap()[i][j]='H';
+                if ((i == playedHero.getCoordinateX() - 1) && (j == playedHero.getCoordinateY() - 1)) {
+                    playedMap.getMap()[i][j] = 'H';
                 }
             }
         }
     }
 
-    public void setHeroArrowNumber(){
-        int cnt=0;
+    /**
+     * Sets the initial number of arrows for the hero based on the number of wumpuses on the map.
+     */
+    public void setHeroArrowNumber() {
+        int cnt = 0;
         for (int i = 0; i < playedMap.getRows(); i++) {
             for (int j = 0; j < playedMap.getColumns(); j++) {
-                if(playedMap.getMap()[i][j]=='U'){
+                if (playedMap.getMap()[i][j] == 'U') {
                     cnt++;
                 }
             }
@@ -49,7 +85,10 @@ public class Play {
         playedHero.setNumberOfArrows(cnt);
     }
 
-    public void printMenu(){
+    /**
+     * Prints the menu of available actions for the player.
+     */
+    public void printMenu() {
         System.out.println("\nVálasszon az alábbiak közül: \n" +
                 "1. Előre lépés\n" +
                 "2. Balra fordulás\n" +
@@ -61,10 +100,21 @@ public class Play {
                 "Ön választása: ");
     }
 
-    public boolean checkHeroPosition(){
-        return heroStartCoordinate_x == playedHero.getCoordinate_x() && heroStartCoordinate_y == playedHero.getCoordinate_y();
+    /**
+     * Checks if the hero is in the starting position.
+     *
+     * @return True if the hero is in the starting position, false otherwise.
+     */
+    public boolean checkHeroPosition() {
+        return heroStartCoordinateX == playedHero.getCoordinateX() && heroStartCoordinateY == playedHero.getCoordinateY();
     }
 
+    /**
+     * Manages the main gameplay loop, allowing the player to perform various actions.
+     *
+     * @throws SQLException If a database access error occurs.
+     * @throws IOException  If an I/O error occurs.
+     */
     public void playMenu() throws SQLException, IOException {
         Scanner scanner = new Scanner(System.in);
         HeroMovements move = new HeroMovements();
@@ -72,17 +122,17 @@ public class Play {
         int cnt = 0;
 
         while (choice != 7) {
-            if(checkHeroPosition() && playedHero.isHaveGold()){
-                System.out.println("\nGratulálok! Megnyerted a játékot! A játék során megtett lépések száma: "+cnt+"\nPontszámod: "+move.getScore()+"\n");
+            if (checkHeroPosition() && playedHero.isHaveGold()) {
+                System.out.println("\nGratulálok! Megnyerted a játékot! A játék során megtett lépések száma: " + cnt +
+                        "\nPontszámod: " + move.getScore() + "\n");
                 DatabaseService database = new DatabaseService();
                 database.databaseConnection();
                 database.isPlayerInScoreTable();
                 database.updateOrSendPlayerScore();
                 database.printScoreTable();
                 database.closeDatabaseConnection();
-                choice=7;
-            }
-            else{
+                choice = 7;
+            } else {
                 playedMap.mapPrint();
                 System.out.println(playedHero);
                 printMenu();
@@ -90,8 +140,8 @@ public class Play {
             }
                 switch (choice) {
                     case 1:
-                        playedHero=move.step(playedHero,playedMap);
-                        playedMap=move.drawStepOnMap(playedMap, playedHero.getCoordinate_x(), playedHero.getCoordinate_y(),playedHero);
+                        playedHero = move.step(playedHero, playedMap);
+                        playedMap = move.drawStepOnMap(playedMap, playedHero.getCoordinateX(), playedHero.getCoordinateY(), playedHero);
                         cnt++;
                         break;
                     case 2:
@@ -101,11 +151,10 @@ public class Play {
                         move.turnRight(playedHero);
                         break;
                     case 4:
-                        if(playedHero.getNumberOfArrows()==0){
+                        if (playedHero.getNumberOfArrows() == 0) {
                             System.out.println("\nNincs nyilad, ezért nem tudsz lőni!\n");
-                        }
-                        else{
-                            playedMap=move.shoot(playedHero, playedMap);
+                        } else {
+                            playedMap = move.shoot(playedHero, playedMap);
                         }
                         break;
                     case 5:
@@ -114,10 +163,10 @@ public class Play {
                     case 6:
                         DatabaseService database = new DatabaseService();
                         database.databaseConnection();
-                        database.sendSavedGameToDatabase(playedMap,playedHero);
+                        database.sendSavedGameToDatabase(playedMap, playedHero);
                         System.out.println("\nSikeresen kilépett! Pálya sikeresen elmentve!\n");
                         database.closeDatabaseConnection();
-                        choice=7;
+                        choice = 7;
                         new Menu().printMenu();
                         break;
                     case 7:
@@ -129,7 +178,4 @@ public class Play {
                 }
         }
     }
-
-
-
 }

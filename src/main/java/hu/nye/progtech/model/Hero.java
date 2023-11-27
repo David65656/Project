@@ -1,16 +1,22 @@
 package hu.nye.progtech.model;
 
-public class Hero extends Object{
+/**
+ * The `Hero` class represents a character in the game with specific attributes such as
+ * viewing direction, number of arrows, and possession of gold.
+ * <p>
+ * It extends the base `Object` class and is designed for use in a game environment.
+ */
 
+public class Hero extends Object {
     private Direction viewingDirection;
     private int numberOfArrows;
     private boolean haveGold;
 
-    public Hero(int coordinate_x, int coordinate_y, Direction viewingDirection, int numberOfArrows, boolean haveGold) {
-        super(ObjectType.HERO, coordinate_x, coordinate_y);
+    public Hero(int coordinateX, int coordinateY, Direction viewingDirection, int numberOfArrows, boolean haveGold) {
+        super(ObjectType.HERO, coordinateX, coordinateY);
         this.viewingDirection = viewingDirection;
         this.numberOfArrows = numberOfArrows;
-        this.haveGold=haveGold;
+        this.haveGold = haveGold;
     }
 
     public Direction getViewingDirection() {
@@ -39,16 +45,15 @@ public class Hero extends Object{
 
     @Override
     public String toString() {
-        if(!isHaveGold()){
-            return "A hős a(z) " + viewingDirection + " irányba néz"+
-                    ", nyilainak száma: " + numberOfArrows + ", "+
-                    coordinate_x + " számú sorban és " +(char)(coordinate_y +64) +" jelű oszlopban tartózkodik!"+
+        if (!isHaveGold()) {
+            return "A hős a(z) " + viewingDirection + " irányba néz" +
+                    ", nyilainak száma: " + numberOfArrows + ", " +
+                    coordinateX + " számú sorban és " + (char) (coordinateY + 64) + " jelű oszlopban tartózkodik!" +
                     " Nincs nála arany!";
-        }
-        else {
-            return "A hős a(z) " + viewingDirection + " irányba néz"+
-                    ", nyilainak száma: " + numberOfArrows + ", "+
-                    coordinate_x + " számú sorban és " +(char)(coordinate_y +64) +" jelű oszlopban tartózkodik!"+
+        } else {
+            return "A hős a(z) " + viewingDirection + " irányba néz" +
+                    ", nyilainak száma: " + numberOfArrows + ", " +
+                    coordinateX + " számú sorban és " + (char) (coordinateY + 64) + " jelű oszlopban tartózkodik!" +
                     " Van nála arany!";
         }
 
