@@ -8,9 +8,15 @@ import hu.nye.progtech.model.ObjectType;
 
 public class HeroMovements {
 
-    int oldCoordinate_x;
-    int oldCoordinate_y;
-    Object object=new Object(ObjectType.WALL,0,0);
+    private int oldCoordinate_x;
+    private int oldCoordinate_y;
+    private Object object=new Object(ObjectType.WALL,0,0);
+    private static int score=0;
+
+    public static int getScore() {
+        return score;
+    }
+
     public Hero step(Hero hero, MapVO map) {
         int newCoordinate_x=hero.getCoordinate_x();
         int newCoordinate_y=hero.getCoordinate_y();
@@ -69,9 +75,11 @@ public class HeroMovements {
     public void checkWumpusGoldPit(MapVO map, int newCoordinate_x, int newCoordinate_y) {
         if (map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1] == 'U') {
             System.out.println("\nWumpuszra léptél és meghaltál!\n");
+            score=0;
         } else if (map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1] == 'P') {
             object=new Object(ObjectType.PIT,newCoordinate_x - 1,newCoordinate_y - 1);
             System.out.println("\nVeremre léptél! Elvesztettél egy nyilat!\n");
+            score=score-25;
         } else if (map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1] == 'G') {
             object=new Object(ObjectType.GOLD,newCoordinate_x - 1,newCoordinate_y - 1);
             System.out.println("\nArany mezőre léptél! Felszedheted az aranyat!\n");
@@ -161,8 +169,10 @@ public class HeroMovements {
     public char checkShotField(MapVO map, int newCoordinate_x, int newCoordinate_y){
         if (map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1] == 'U') {
             System.out.println("\nEltaláltad a wumpuszt! A wumpusz meghalt!\n");
+            score=score+25;
         } else if (map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1] == 'W') {
             System.out.println("\nA lövés sikertelen! A nyíl nem talált!\n");
+            score=score-25;
         }
 
         return map.getMap()[newCoordinate_x - 1][newCoordinate_y - 1];
@@ -173,6 +183,7 @@ public class HeroMovements {
                 map.getMap()[object.getCoordinate_x()][object.getCoordinate_y()]){
             System.out.println("\nArany felvéve!\n");
             hero.setHaveGold(true);
+            score=score+50;
         }
         else{
             System.out.println("\nNem arany mezőn vagy!\n");

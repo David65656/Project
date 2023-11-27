@@ -7,55 +7,34 @@ import hu.nye.progtech.model.MapVO;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Play {
-    MapVO playedMap;
-    Hero playedHero=new Hero(0,0,Direction.North,0,false);
-    int heroStartCoordinate_x;
-    int heroStartCoordinate_y;
-    public Play() throws IOException {
-        new EditMap();
-        playedMap=readSavedMap();
+    private MapVO playedMap;
+    private Hero playedHero;
+    private final int heroStartCoordinate_x;
+    private final int heroStartCoordinate_y;
+    public Play(MapVO playedMap, Hero playedHero) throws SQLException, IOException {
+        this.playedMap = playedMap;
+        this.playedHero = playedHero;
+
+        heroStartCoordinate_x = playedHero.getCoordinate_x();
+        heroStartCoordinate_y = playedHero.getCoordinate_y();
+        setHeroOnMap();
+        setHeroArrowNumber();
+
         playMenu();
     }
 
-    public MapVO readSavedMap() throws FileNotFoundException {
-        File file = new File("savedMap.txt");
-        Scanner scanner = new Scanner(file);
-
-        int cnt=0;
-        Direction heroDirection = null;
-
-        int size = scanner.nextInt();
-        playedHero.setCoordinate_y(scanner.next().charAt(0)-64);
-        playedHero.setCoordinate_x(scanner.nextInt());
-
-        String direction = scanner.next();
-        if(direction.equals("North")){
-            heroDirection = Direction.North;
-        } else if (direction.equals("South")) {
-            heroDirection = Direction.South;
-        } else if (direction.equals("East")){
-            heroDirection = Direction.East;
-        } else if (direction.equals("West")){
-            heroDirection = Direction.West;
-        }
-
-        playedHero.setViewingDirection(heroDirection);
-
-        char[][] scannedMap = new char[size][size];
-        for (int i = 0; i < size; i++) {
-            String line = scanner.next();
-            for (int j = 0; j < size; j++) {
-                scannedMap[i][j] = line.charAt(j);
+    public void setHeroOnMap(){
+        for (int i = 0; i < playedMap.getRows(); i++) {
+            for (int j = 0; j < playedMap.getColumns(); j++) {
+                if((i == playedHero.getCoordinate_x()-1) && (j == playedHero.getCoordinate_y()-1)){
+                    playedMap.getMap()[i][j]='H';
+                }
             }
         }
-        playedMap = new MapVO(size,size,scannedMap);
-        setHeroArrowNumber();
-        heroStartCoordinate_x= playedHero.getCoordinate_x();
-        heroStartCoordinate_y= playedHero.getCoordinate_y();
-        return playedMap;
     }
 
     public void setHeroArrowNumber(){
@@ -71,7 +50,7 @@ public class Play {
     }
 
     public void printMenu(){
-        System.out.println("Válasszon az alábbiak közül: \n" +
+        System.out.println("\nVálasszon az alábbiak közül: \n" +
                 "1. Előre lépés\n" +
                 "2. Balra fordulás\n" +
                 "3. Jobbra fordulás\n" +
@@ -86,14 +65,21 @@ public class Play {
         return heroStartCoordinate_x == playedHero.getCoordinate_x() && heroStartCoordinate_y == playedHero.getCoordinate_y();
     }
 
-    public void playMenu() {
+    public void playMenu() throws SQLException, IOException {
         Scanner scanner = new Scanner(System.in);
         HeroMovements move = new HeroMovements();
         int choice = 0;
+        int cnt = 0;
 
         while (choice != 7) {
             if(checkHeroPosition() && playedHero.isHaveGold()){
-                System.out.println("\nGratulálok! Megnyerted a játékot!\n");
+                System.out.println("\nGratulálok! Megnyerted a játékot! A játék során megtett lépések száma: "+cnt+"\nPontszámod: "+move.getScore()+"\n");
+                DatabaseService database = new DatabaseService();
+                database.databaseConnection();
+                database.isPlayerInScoreTable();
+                database.updateOrSendPlayerScore();
+                database.printScoreTable();
+                database.closeDatabaseConnection();
                 choice=7;
             }
             else{
@@ -106,6 +92,7 @@ public class Play {
                     case 1:
                         playedHero=move.step(playedHero,playedMap);
                         playedMap=move.drawStepOnMap(playedMap, playedHero.getCoordinate_x(), playedHero.getCoordinate_y(),playedHero);
+                        cnt++;
                         break;
                     case 2:
                         move.turnLeft(playedHero);
@@ -125,13 +112,20 @@ public class Play {
                         move.pickupGold(playedHero, playedMap);
                         break;
                     case 6:
-                        System.out.println("Sikeresen kilépett! Pálya sikeresen elmentve!\n");
+                        DatabaseService database = new DatabaseService();
+                        database.databaseConnection();
+                        database.sendSavedGameToDatabase(playedMap,playedHero);
+                        System.out.println("\nSikeresen kilépett! Pálya sikeresen elmentve!\n");
+                        database.closeDatabaseConnection();
+                        choice=7;
+                        new Menu().printMenu();
                         break;
                     case 7:
-                        System.out.println("Sikeresen kilépett!");
+                        System.out.println("\nSikeresen kilépett!\n");
+                        new Menu().printMenu();
                         break;
                     default:
-                        System.out.println("Hiba! Próbálja újra!");
+                        System.out.println("\nHiba! Próbálja újra!\n");
                 }
         }
     }

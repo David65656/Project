@@ -3,7 +3,7 @@ package hu.nye.progtech.model;
 public class MapVO {
     final private int rows;
     final private int columns;
-    char[][] map;
+    private char[][] map;
 
     public MapVO(int rows, int columns, char[][] map) {
         this.rows = rows;

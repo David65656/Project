@@ -10,8 +10,8 @@ import java.util.Scanner;
 
 public class EditMap {
 
-    Hero editedHero;
-    int size;
+    private Hero editedHero;
+    private int size;
 
     public EditMap() throws IOException {
         readSize();
@@ -21,7 +21,7 @@ public class EditMap {
         Scanner scanner = new Scanner(System.in);
         size=0;
         while(!sizeCheck(size)){
-            System.out.println("Adja meg a pálya méretét (6<=N<=20): ");
+            System.out.println("\nAdja meg a pálya méretét (6<=N<=20): ");
             size = scanner.nextInt();
             if(sizeCheck(size)){
                 MapVO empty = emptyMap(size);
@@ -29,7 +29,7 @@ public class EditMap {
                 menu(empty);
             }
             else{
-                System.out.println("Hiba! Próbálja újra!");
+                System.out.println("\nHiba! Próbálja újra!\n");
             }
         }
     }
@@ -51,21 +51,21 @@ public class EditMap {
                     map.mapPrint();
                     break;
                 case 3:
-                    System.out.println("Sikeresen kilépett!");
+                    System.out.println("\nSikeresen kilépett!\n");
                     break;
                 case 4:
                     if(checkMap(map)){
                         saveMap(map);
                         editedHero.setNumberOfArrows(wumpusCount(map));
-                        System.out.println("Sikeresen kilépett! Pálya sikeresen elmentve!\n" +editedHero);
+                        System.out.println("\nSikeresen kilépett! Pálya sikeresen elmentve!\n" +editedHero);
                         choice = 3;
                     }
                     else {
-                        System.out.println("Hiba! Pálya mentése nem sikerült!");
+                        System.out.println("\nHiba! Pálya mentése nem sikerült!\n");
                     }
                     break;
                 default:
-                    System.out.println("Hiba! Próbálja újra!");
+                    System.out.println("\nHiba! Próbálja újra!\n");
             }
         }
     }
@@ -106,7 +106,7 @@ public class EditMap {
     }
 
     public void printMenu(){
-        System.out.println("Válasszon az alábbiak közül: \n" +
+        System.out.println("\nVálasszon az alábbiak közül: \n" +
                 "1. Elem hozzáadása\n" +
                 "2. Elem eltávolítása\n" +
                 "3. Kilépés pálya mentése nélkül\n" +
@@ -200,7 +200,7 @@ public class EditMap {
                     direction = Direction.East;
                     break;
                 default:
-                    System.out.println("Hiba! Próbálja újra!");
+                    System.out.println("\nHiba! Próbálja újra!\n");
             }
 
         }
@@ -232,7 +232,7 @@ public class EditMap {
                     type = ObjectType.HERO;
                     break;
                 default:
-                    System.out.println("Hiba! Próbálja újra!");
+                    System.out.println("\nHiba! Próbálja újra!\n");
             }
         }
 
@@ -249,7 +249,7 @@ public class EditMap {
 
     public boolean checkAddObject(MapVO map, Object object){
         if(object.getCoordinate_y()>map.getRows() || object.getCoordinate_x()> map.getColumns()){
-            System.out.println("\nHiba! A pálya "+map.getRows()+"x"+map.getRows()+" méretű!");
+            System.out.println("\nHiba! A pálya "+map.getRows()+"x"+map.getRows()+" méretű!\n");
             return false;
         }
 
@@ -309,7 +309,7 @@ public class EditMap {
 
     public boolean checkRemoveObject(MapVO map, int rowNumber, int columnNumber){
         if(rowNumber>map.getRows() || columnNumber> map.getColumns()){
-            System.out.println("\nHiba! A pálya "+map.getRows()+"x"+map.getRows()+" méretű!");
+            System.out.println("\nHiba! A pálya "+map.getRows()+"x"+map.getRows()+" méretű!\n");
             return false;
         }
 
