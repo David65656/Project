@@ -39,5 +39,6 @@ CREATE TABLE savedGameTable (
     heroCurrentView varchar(10) NOT NULL,
     heroCurrentHaveGold tinyint(1) NOT NULL,
     heroCurrentNumberOfArrows INT NOT NULL,
+    userCurrentScore INT NOT NULL,
     FOREIGN KEY(mapID) REFERENCES mapTable(mapID)
 );
