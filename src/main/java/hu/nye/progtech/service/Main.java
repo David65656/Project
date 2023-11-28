@@ -1,6 +1,5 @@
 package hu.nye.progtech.service;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -12,10 +11,16 @@ public class Main {
      * The main method of the application.
      *
      * @param args Command line arguments (not used in this application).
-     * @throws IOException  If an I/O error occurs.
-     * @throws SQLException If a database access error occurs.
      */
-    public static void main(String[] args) throws IOException, SQLException {
-        new Menu();
+    public static void main(String[] args) {
+        try {
+            new Menu();
+        } catch (SQLException e) {
+            System.out.println("Nem indítottál el adatbázist!\n" + e.getMessage());
+            System.exit(0);
+        } catch (Exception e) {
+            System.out.println("Hiba: " + e.getMessage());
+            System.exit(0);
+        }
     }
 }
