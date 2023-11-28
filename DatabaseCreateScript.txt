@@ -1,0 +1,43 @@
+DROP DATABASE IF EXISTS wumpusdatabase;
+CREATE DATABASE wumpusdatabase;
+USE wumpusdatabase;
+
+DROP TABLE IF EXISTS scoreTable;
+DROP TABLE IF EXISTS mapTable;
+DROP TABLE IF EXISTS heroTable;
+DROP TABLE IF EXISTS savedGameTable;
+
+CREATE TABLE heroTable (
+    heroID int AUTO_INCREMENT PRIMARY KEY,
+    heroRow int NOT NULL,
+    heroColumn char(1) NOT NULL,
+    heroView varchar(10) NOT NULL
+);
+
+CREATE TABLE mapTable (
+    mapID int AUTO_INCREMENT PRIMARY KEY,
+    map varchar(500) NOT NULL,
+    builderName varchar(20) NOT NULL,
+    heroID int NOT NULL,
+    FOREIGN KEY(heroID) REFERENCES heroTable(heroID)
+);
+
+CREATE TABLE scoreTable (
+    userName varchar(20),
+    score INT,
+    mapID int NOT NULL,
+    PRIMARY KEY(userName, mapID),
+    FOREIGN KEY(mapID) REFERENCES mapTable(mapID)
+);
+
+CREATE TABLE savedGameTable (
+    userName varchar(20) PRIMARY KEY,
+    mapID int NOT NULL,
+    mapCurrentState varchar(500) NOT NULL,
+    heroCurrentRow int NOT NULL,
+    heroCurrentColumn char(1) NOT NULL,
+    heroCurrentView varchar(10) NOT NULL,
+    heroCurrentHaveGold tinyint(1) NOT NULL,
+    heroCurrentNumberOfArrows INT NOT NULL,
+    FOREIGN KEY(mapID) REFERENCES mapTable(mapID)
+);

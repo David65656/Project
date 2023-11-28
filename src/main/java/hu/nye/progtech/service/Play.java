@@ -2,6 +2,7 @@ package hu.nye.progtech.service;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import hu.nye.progtech.model.Hero;
@@ -46,13 +47,16 @@ public class Play {
      * @throws SQLException If a database access error occurs.
      * @throws IOException  If an I/O error occurs.
      */
-    public Play(MapVO playedMap, Hero playedHero, int heroStartCoordinateX, int heroStartCoordinateY) throws SQLException, IOException {
+    public Play(MapVO playedMap, Hero playedHero,
+                int heroStartCoordinateX, int heroStartCoordinateY, int score) throws SQLException, IOException {
         this.playedMap = playedMap;
         this.playedHero = playedHero;
 
         this.heroStartCoordinateX = heroStartCoordinateX;
         this.heroStartCoordinateY = heroStartCoordinateY;
         setHeroOnMap();
+
+        HeroMovements.setScore(score);
 
         playMenu();
     }
@@ -124,11 +128,10 @@ public class Play {
         while (choice != 7) {
             if (checkHeroPosition() && playedHero.isHaveGold()) {
                 System.out.println("\nGratulálok! Megnyerted a játékot! A játék során megtett lépések száma: " + cnt +
-                        "\nPontszámod: " + move.getScore() + "\n");
+                        "\nPontszámod: " + HeroMovements.getScore() + "\n");
                 DatabaseService database = new DatabaseService();
                 database.databaseConnection();
                 database.isPlayerInScoreTable();
-                database.updateOrSendPlayerScore();
                 database.printScoreTable();
                 database.closeDatabaseConnection();
                 choice = 7;
@@ -136,7 +139,16 @@ public class Play {
                 playedMap.mapPrint();
                 System.out.println(playedHero);
                 printMenu();
-                choice = scanner.nextInt();
+
+                try {
+                    choice = scanner.nextInt();
+                } catch (InputMismatchException e) {
+                    scanner.next();
+                    playedMap.mapPrint();
+                    System.out.println(playedHero);
+                    printMenu();
+                }
+
             }
                 switch (choice) {
                     case 1:
@@ -164,6 +176,7 @@ public class Play {
                         DatabaseService database = new DatabaseService();
                         database.databaseConnection();
                         database.sendSavedGameToDatabase(playedMap, playedHero);
+                        database.sendPlayerScoreToDatabase();
                         System.out.println("\nSikeresen kilépett! Pálya sikeresen elmentve!\n");
                         database.closeDatabaseConnection();
                         choice = 7;

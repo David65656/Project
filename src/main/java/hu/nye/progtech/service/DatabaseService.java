@@ -195,7 +195,7 @@ public class DatabaseService {
      */
     public void printScoreTable() throws SQLException {
         int cnt = 1;
-        String query = "SELECT userName, score FROM scoretable WHERE mapID=?;";
+        String query = "SELECT userName, score FROM scoretable WHERE mapID=? ORDER BY score DESC;";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, Menu.getMapID());
@@ -251,27 +251,27 @@ public class DatabaseService {
         statement.close();
     }
 
-    private boolean isUserExists;
-
     /**
      * Checks if a player is present in the score table for the current user.
      * <p>
      * This method queries the score table in the database to determine if the current
-     * user's username exists in the table. The result is stored in the 'isUserExists'
-     * variable, which is a boolean indicating whether the user is present in the table.
+     * user's username exists in the table.
      *
      * @throws SQLException If a database access error occurs.
      */
     public void isPlayerInScoreTable() throws SQLException {
-        String query = "SELECT COUNT(*) > 0 AS user_exists FROM scoretable WHERE userName=?;";
+        String query = "SELECT userName FROM scoretable WHERE mapID=? AND userName=?;";
         Statement statement = connection.createStatement();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, Menu.getUserName());
+            preparedStatement.setInt(1, Menu.getMapID());
+            preparedStatement.setString(2, Menu.getUserName());
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                isUserExists = convertIntToBoolean(resultSet.getInt("user_exists"));
+            if (resultSet.next()) {
+                updatePlayerScoreInDatabase();
+            } else {
+                sendPlayerScoreToDatabase();
             }
         }
         statement.close();
@@ -291,23 +291,6 @@ public class DatabaseService {
     }
 
     /**
-     * Updates or sends the player's score to the database based on the existence in the score table.
-     * <p>
-     * This method checks if the current user's username exists in the score table. If the user
-     * exists, it calls the 'updatePlayerScoreInDatabase' method to update the score. Otherwise,
-     * it calls the 'sendPlayerScoreToDatabase' method to insert a new score entry for the user.
-     *
-     * @throws SQLException If a database access error occurs.
-     */
-    public void updateOrSendPlayerScore() throws SQLException {
-        if (isUserExists) {
-            updatePlayerScoreInDatabase();
-        } else {
-            sendPlayerScoreToDatabase();
-        }
-    }
-
-    /**
      * Sends the saved game data (map and hero information) to the database.
      *
      * @param map  The map data to be saved.
@@ -316,7 +299,7 @@ public class DatabaseService {
      */
     public void sendSavedGameToDatabase(MapVO map, Hero hero) throws SQLException {
         Statement statement = connection.createStatement();
-        String query = "INSERT INTO savedgametable VALUES (?,?,?,?,?,?,?,?);";
+        String query = "INSERT INTO savedgametable VALUES (?,?,?,?,?,?,?,?,?);";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, Menu.getUserName());
@@ -327,6 +310,7 @@ public class DatabaseService {
             preparedStatement.setString(6, convertDirectionToString(hero.getViewingDirection()));
             preparedStatement.setInt(7, convertBooleanToInt(hero.isHaveGold()));
             preparedStatement.setInt(8, hero.getNumberOfArrows());
+            preparedStatement.setInt(9, HeroMovements.getScore());
 
             preparedStatement.executeUpdate();
         }
@@ -458,6 +442,32 @@ public class DatabaseService {
             }
         }
         return heroStartColumn;
+    }
+
+    private int userSavedScore;
+    /**
+     * Retrieves the saved score of a user from the database based on their username.
+     * <p>
+     * This method executes a SQL query to retrieve the saved score associated with a specific user from the "savedgametable".
+     * The query is parameterized with the username to ensure security and prevent SQL injection.
+     *
+     * @return The saved score of the user, as an integer. If no record is found for the user, the default value is returned.
+     * @throws SQLException If a database access error occurs or the SQL execution fails.
+     */
+
+    public int loadUserSavedScoreFromDatabase() throws SQLException {
+        String query = "SELECT userCurrentScore FROM savedgametable WHERE userName=?;";
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1,  Menu.getUserName());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                userSavedScore = resultSet.getInt("heroColumn");
+            }
+        }
+        return userSavedScore;
     }
 
     /**

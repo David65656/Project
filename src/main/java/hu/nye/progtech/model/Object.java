@@ -29,6 +29,14 @@ public class Object {
         return coordinateY;
     }
 
+    public void setCoordinateX(int coordinateX) {
+        this.coordinateX = coordinateX;
+    }
+
+    public void setCoordinateY(int coordinateY) {
+        this.coordinateY = coordinateY;
+    }
+
     @Override
     public String toString() {
         return "A létrehozott objektum típusa: " + type + "!" +

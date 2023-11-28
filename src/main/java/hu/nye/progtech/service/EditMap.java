@@ -2,6 +2,7 @@ package hu.nye.progtech.service;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import hu.nye.progtech.model.Direction;
@@ -23,8 +24,8 @@ import hu.nye.progtech.model.ObjectType;
  */
 public class EditMap {
 
-    private Hero editedHero;
-    private MapVO editedMap;
+    private static Hero editedHero;
+    private static MapVO editedMap;
 
     public EditMap() throws IOException, SQLException {
         readSize();
@@ -45,7 +46,14 @@ public class EditMap {
         int size = 0;
         while (!sizeCheck(size)) {
             System.out.println("\nAdja meg a pálya méretét (6<=N<=20): ");
-            size = scanner.nextInt();
+
+            try {
+                size = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                scanner.next();
+                System.out.println("\nAdja meg a pálya méretét (6<=N<=20): ");
+            }
+
             if (sizeCheck(size)) {
                 MapVO empty = emptyMap(size);
                 empty.mapPrint();
@@ -76,14 +84,37 @@ public class EditMap {
 
         while (choice != 3) {
             printMenu();
-            choice = scanner.nextInt();
+
+            try {
+                choice = scanner.nextInt();
+            } catch (InputMismatchException e) {
+                scanner.next();
+                printMenu();
+            }
+
             switch (choice) {
                 case 1:
-                    editedMap = addObject(map, objectRead(map));
+                    try {
+                        editedMap = addObject(map, objectRead());
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        System.out.println("\nHiba! Próbáld újra!\n");
+                        editedMap = addObject(map, objectRead());
+                    }
                     map.mapPrint();
+
+                    if (editedHero == null) {
+                        System.out.println("\nNincs hős a pályán!\n");
+                    } else {
+                        System.out.println(editedHero);
+                    }
                     break;
                 case 2:
-                    editedMap = removeObject(map);
+                    try {
+                        editedMap = removeObject(map);
+                    } catch (IndexOutOfBoundsException e) {
+                        System.out.println("\nHiba! Próbáld újra!\n");
+                        editedMap = removeObject(map);
+                    }
                     map.mapPrint();
                     break;
                 case 3:
@@ -93,6 +124,7 @@ public class EditMap {
                 case 4:
                     if (checkMap(map)) {
                         editedHero.setNumberOfArrows(wumpusCount(map));
+
                         DatabaseService database = new DatabaseService();
                         database.databaseConnection();
                         database.sendEditedHeroToDatabase(editedHero);
@@ -129,7 +161,7 @@ public class EditMap {
             return false;
         }
 
-        if (heroCount(map) != 1) {
+        if (editedHero == null) {
             System.out.println("\nHiba! Nincs hős a pályán!\n");
             return false;
         }
@@ -297,10 +329,9 @@ public class EditMap {
     /**
      * Reads and returns an Object based on user input, including the element type, row number, and column letter.
      *
-     * @param map The MapVO object representing the map information.
      * @return The Object containing the specified element type, row number, and column letter.
      */
-    public Object objectRead(MapVO map) {
+    public static Object objectRead() {
         Scanner scanner = new Scanner(System.in);
 
         ObjectType type = null;
@@ -329,14 +360,19 @@ public class EditMap {
         }
 
         System.out.println("Adja meg a sor számát: ");
-        int rowNumber = scanner.nextInt();
+
+        int rowNumber = 0;
+        try {
+            rowNumber = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            scanner.next();
+            objectRead();
+        }
 
         System.out.println("Adja meg az oszlop betűjelét: ");
         int columnNumber = (scanner.next().charAt(0) - 64);
 
         return new Object(type, rowNumber, columnNumber);
-
-
     }
 
     /**
@@ -367,9 +403,18 @@ public class EditMap {
             return false;
         }
 
-        if (map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != '_') {
-            System.out.println("\nHiba! Az adott helyen van már elem!\n");
-            return false;
+        try {
+            if (object.getType() != ObjectType.HERO && map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != '_') {
+                System.out.println("\nHiba! Az adott helyen van már elem!\n");
+                return false;
+            }
+
+            if (object.getType() == ObjectType.HERO && (map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != '_' &&
+                    map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != 'G')) {
+                System.out.println("\nHiba! Hőst csak üres vagy arany mezőre rakhatsz!\n");
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            objectRead();
         }
 
         return true;
@@ -392,11 +437,9 @@ public class EditMap {
                         newMap[object.getCoordinateX() - 1][object.getCoordinateY() - 1] = 'G';
                         break;
                     case HERO:
-                        newMap[object.getCoordinateX() - 1][object.getCoordinateY() - 1] = 'H';
-
                         Direction direction = heroDirectionRead();
                         int numberOfArrows = wumpusCount(map);
-                        editedHero = new Hero(object.getCoordinateY(), object.getCoordinateX(), direction, numberOfArrows, false);
+                        editedHero = new Hero(object.getCoordinateX(), object.getCoordinateY(), direction, numberOfArrows, false);
                         break;
                     case WALL:
                         newMap[object.getCoordinateX() - 1][object.getCoordinateY() - 1] = 'W';
@@ -425,10 +468,16 @@ public class EditMap {
      * @param columnNumber The column number of the element to be removed.
      * @return {@code true} if the removal is valid, {@code false} otherwise.
      */
-    public boolean checkRemoveObject(MapVO map, int rowNumber, int columnNumber) {
+    public static boolean checkRemoveObject(MapVO map, int rowNumber, int columnNumber) {
         if (rowNumber > map.getRows() || columnNumber > map.getColumns()) {
             System.out.println("\nHiba! A pálya " + map.getRows() + "x" + map.getRows() + " méretű!\n");
             return false;
+        }
+
+        if (editedHero != null) {
+            if (rowNumber == editedHero.getCoordinateY() - 1 && columnNumber == editedHero.getCoordinateX() - 1) {
+                editedHero = null;
+            }
         }
 
         if (rowNumber == 1 || columnNumber == 1 || rowNumber == map.getRows() || columnNumber == map.getColumns()) {
@@ -445,10 +494,19 @@ public class EditMap {
      * @param map The MapVO object representing the map information.
      * @return A new MapVO object after the removal, or the original map if the removal is not valid.
      */
-    public MapVO removeObject(MapVO map) {
+    public static MapVO removeObject(MapVO map) {
         Scanner scanner = new Scanner(System.in);
+
         System.out.println("Adja meg az eltávolítandó elem sorszámát: ");
-        int rowNumber = scanner.nextInt();
+
+        int rowNumber = 0;
+        try {
+            rowNumber = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            scanner.next();
+            removeObject(map);
+        }
+
         System.out.println("Adja meg az eltávolítandó elem oszlopának betűjelét: ");
         int columnNumber = (scanner.next().charAt(0) - 64);
 

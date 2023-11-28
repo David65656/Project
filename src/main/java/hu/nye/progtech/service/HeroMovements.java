@@ -1,13 +1,13 @@
 package hu.nye.progtech.service;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 import hu.nye.progtech.model.Direction;
 import hu.nye.progtech.model.Hero;
 import hu.nye.progtech.model.MapVO;
 import hu.nye.progtech.model.Object;
 import hu.nye.progtech.model.ObjectType;
-
-import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * Class that handles the movements and actions of the Hero in the game.
@@ -26,6 +26,10 @@ public class HeroMovements {
      */
     public static int getScore() {
         return score;
+    }
+
+    public static void setScore(int score) {
+        HeroMovements.score = score;
     }
 
     /**
@@ -102,12 +106,6 @@ public class HeroMovements {
         if (map.getMap()[newCoordinateX - 1][newCoordinateY - 1] == 'U') {
             System.out.println("\nWumpuszra léptél és meghaltál!\n");
             score = 0;
-            DatabaseService database = new DatabaseService();
-            database.databaseConnection();
-            database.isPlayerInScoreTable();
-            database.updateOrSendPlayerScore();
-            database.printScoreTable();
-            database.closeDatabaseConnection();
             new Menu();
         } else if (map.getMap()[newCoordinateX - 1][newCoordinateY - 1] == 'P') {
             object = new Object(ObjectType.PIT, newCoordinateX - 1, newCoordinateY - 1);
