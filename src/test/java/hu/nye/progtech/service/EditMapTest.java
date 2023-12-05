@@ -7,10 +7,7 @@ import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.swing.*;
 import java.io.*;
-import java.sql.SQLException;
-import java.util.InputMismatchException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,39 +41,39 @@ class EditMapTest {
     }
 
     @Test
-    void testSizeCheck_validSize_shouldReturnTrue() {
+    void testSizeCheckValidSizeShouldReturnTrue() {
         assertTrue(underTest.sizeCheck(10));
     }
 
     @Test
-    void testSizeCheck_invalidSize_shouldReturnFalse() {
+    void testSizeCheckInvalidSizeShouldReturnFalse() {
         assertFalse(underTest.sizeCheck(5));
         assertFalse(underTest.sizeCheck(25));
     }
 
     @Test
-    void testWumpusBySize_smallSize_shouldReturnOne() {
+    void testWumpusBySizeSmallSizeShouldReturnOne() {
         assertEquals(1, underTest.wumpusBySize(6));
     }
 
     @Test
-    void testWumpusBySize_mediumSize_shouldReturnTwo() {
+    void testWumpusBySizeMediumSizeShouldReturnTwo() {
         assertEquals(2, underTest.wumpusBySize(10));
     }
 
     @Test
-    void testWumpusBySize_largeSize_shouldReturnThree() {
+    void testWumpusBySizeLargeSizeShouldReturnThree() {
         assertEquals(3, underTest.wumpusBySize(15));
     }
 
     @Test
-    void testWumpusCount_noWumpus_shouldReturnZero() {
+    void testWumpusCountNoWumpusShouldReturnZero() {
         MapVO map = underTest.emptyMap(10);
         assertEquals(0, underTest.wumpusCount(map));
     }
 
     @Test
-    void testWumpusCount_TwoWumpus_shouldReturnTwo() {
+    void testWumpusCountTwoWumpusShouldReturnTwo() {
         char[][] testMap = {
                 {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
                 {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
@@ -94,13 +91,13 @@ class EditMapTest {
     }
 
     @Test
-    void testGoldCount_noGold_shouldReturnZero() {
+    void testGoldCountNoGoldShouldReturnZero() {
         MapVO map = underTest.emptyMap(10);
         assertEquals(0, underTest.goldCount(map));
     }
 
     @Test
-    void testGoldCount_oneGold_shouldReturnOne() {
+    void testGoldCountOneGoldShouldReturnOne() {
         char[][] testMap = {
                 {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
                 {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
@@ -118,13 +115,13 @@ class EditMapTest {
     }
 
     @Test
-    void testHeroCount_noHero_shouldReturnZero() {
+    void testHeroCountNoHeroShouldReturnZero() {
         MapVO map = underTest.emptyMap(10);
         assertEquals(0, underTest.heroCount(map));
     }
 
     @Test
-    void testHeroCount_oneHero_shouldReturnOne() {
+    void testHeroCountOneHeroShouldReturnOne() {
         char[][] testMap = {
                 {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
                 {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
@@ -142,7 +139,7 @@ class EditMapTest {
     }
 
     @Test
-    void testEmptyMap_validSize_shouldReturnCorrectMap() {
+    void testEmptyMapValidSizeShouldReturnCorrectMap() {
         MapVO map = underTest.emptyMap(8);
 
         char[][] expectedMap = {
@@ -160,37 +157,37 @@ class EditMapTest {
     }
 
     @Test
-    void testHeroDirectionRead_validNorthDirection_shouldReturnNorthDirection() {
+    void testHeroDirectionReadValidNorthDirectionShouldReturnNorthDirection() {
         provideInput("North\n");
         assertEquals(Direction.North, underTest.heroDirectionRead());
     }
 
     @Test
-    void testHeroDirectionRead_validSouthDirection_shouldReturnSouthDirection() {
+    void testHeroDirectionReadValidSouthDirectionShouldReturnSouthDirection() {
         provideInput("South\n");
         assertEquals(Direction.South, underTest.heroDirectionRead());
     }
 
     @Test
-    void testHeroDirectionRead_validEastDirection_shouldReturnEastDirection() {
+    void testHeroDirectionReadValidEastDirectionShouldReturnEastDirection() {
         provideInput("East\n");
         assertEquals(Direction.East, underTest.heroDirectionRead());
     }
 
     @Test
-    void testHeroDirectionRead_validWestDirection_shouldReturnWestDirection() {
+    void testHeroDirectionReadValidWestDirectionShouldReturnWestDirection() {
         provideInput("West\n");
         assertEquals(Direction.West, underTest.heroDirectionRead());
     }
 
     @Test
-    void testHeroDirectionRead_invalidDirection_shouldRetry() {
+    void testHeroDirectionReadInvalidDirectionShouldRetry() {
         provideInput("Invalid\nNorth\n");
         assertEquals(Direction.North, underTest.heroDirectionRead());
     }
 
     @Test
-    void testObjectRead_validHeroObjectType_shouldReturnHeroObject() {
+    void testObjectReadValidHeroObjectTypeShouldReturnHeroObject() {
         provideInput("HERO\n1\nA\n");
         Object object = underTest.objectRead();
         assertEquals(ObjectType.HERO, object.getType());
@@ -199,7 +196,7 @@ class EditMapTest {
     }
 
     @Test
-    void testObjectRead_validWumpusObjectType_shouldReturnWumpusObject() {
+    void testObjectReadValidWumpusObjectTypeShouldReturnWumpusObject() {
         provideInput("WUMPUS\n1\nA\n");
         Object object = underTest.objectRead();
         assertEquals(ObjectType.WUMPUS, object.getType());
@@ -208,7 +205,7 @@ class EditMapTest {
     }
 
     @Test
-    void testObjectRead_validGoldObjectType_shouldReturnGoldObject() {
+    void testObjectReadValidGoldObjectTypeShouldReturnGoldObject() {
         provideInput("GOLD\n1\nA\n");
         Object object = underTest.objectRead();
         assertEquals(ObjectType.GOLD, object.getType());
@@ -217,7 +214,7 @@ class EditMapTest {
     }
 
     @Test
-    void testObjectRead_validPitObjectType_shouldReturnPitObject() {
+    void testObjectReadValidPitObjectTypeShouldReturnPitObject() {
         provideInput("PIT\n1\nA\n");
         Object object = underTest.objectRead();
         assertEquals(ObjectType.PIT, object.getType());
@@ -226,7 +223,7 @@ class EditMapTest {
     }
 
     @Test
-    void testObjectRead_validWallObjectType_shouldReturnWallObject() {
+    void testObjectReadValidWallObjectTypeShouldReturnWallObject() {
         provideInput("WALL\n1\nA\n");
         Object object = underTest.objectRead();
         assertEquals(ObjectType.WALL, object.getType());
@@ -235,7 +232,7 @@ class EditMapTest {
     }
 
     @Test
-    void testObjectRead_invalidObjectType_shouldRetry() {
+    void testObjectReadInvalidObjectTypeShouldRetry() {
         provideInput("Invalid\nHERO\n1\nA\n");
         Object object = underTest.objectRead();
         assertEquals(ObjectType.HERO, object.getType());
@@ -244,7 +241,7 @@ class EditMapTest {
     }
 
     @Test
-    void testAddObject_addHero_shouldAddToMapAndSetEditedHero() {
+    void testAddObjectAddHeroShouldAddToMapAndSetEditedHero() {
 
         MapVO initialMap = underTest.emptyMap(10);
 
@@ -262,7 +259,7 @@ class EditMapTest {
     }
 
     @Test
-    void testAddObject_addGold_shouldAddToMap() {
+    void testAddObjectAddGoldShouldAddToMap() {
 
         MapVO initialMap = underTest.emptyMap(10);
 
@@ -274,7 +271,7 @@ class EditMapTest {
     }
 
     @Test
-    void testAddObject_addWumpus_shouldAddToMap() {
+    void testAddObjectAddWumpusShouldAddToMap() {
 
         MapVO initialMap = underTest.emptyMap(10);
 
@@ -286,7 +283,7 @@ class EditMapTest {
     }
 
     @Test
-    void testAddObject_addPit_shouldAddToMap() {
+    void testAddObjectAddPitShouldAddToMap() {
 
         MapVO initialMap = underTest.emptyMap(10);
 
@@ -298,7 +295,7 @@ class EditMapTest {
     }
 
     @Test
-    void testAddObject_addWall_shouldAddToMap() {
+    void testAddObjectAddWallShouldAddToMap() {
 
         MapVO initialMap = underTest.emptyMap(10);
 
@@ -310,7 +307,7 @@ class EditMapTest {
     }
 
     @Test
-    void testRemoveObject_removeValidElement_shouldRemoveFromMap() {
+    void testRemoveObjectRemoveValidElementShouldRemoveFromMap() {
 
         MapVO initialMap = underTest.emptyMap(10);
 
@@ -323,7 +320,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckRemoveObject_validCoordinates_shouldReturnTrue() {
+    void testCheckRemoveObjectValidCoordinatesShouldReturnTrue() {
 
         char[][] testMap = {
                 {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
@@ -343,7 +340,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckRemoveObject_invalidCoordinates_shouldReturnFalse() {
+    void testCheckRemoveObjectInvalidCoordinatesShouldReturnFalse() {
 
         char[][] testMap = {
                 {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
@@ -366,7 +363,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckAddObject_validAddition_shouldReturnTrue() {
+    void testCheckAddObjectValidAdditionShouldReturnTrue() {
 
         MapVO map = underTest.emptyMap(10);
 
@@ -376,7 +373,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckAddObject_invalidCoordinates_shouldReturnFalse() {
+    void testCheckAddObjectInvalidCoordinatesShouldReturnFalse() {
 
         MapVO map = underTest.emptyMap(10);
 
@@ -386,7 +383,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckAddObject_duplicateGold_shouldReturnFalse() {
+    void testCheckAddObjectDuplicateGoldShouldReturnFalse() {
 
         MapVO map = underTest.emptyMap(10);
         map.getMap()[2][3] = 'G';
@@ -397,7 +394,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckAddObject_duplicateHero_shouldReturnFalse() {
+    void testCheckAddObjectDuplicateHeroShouldReturnFalse() {
 
         MapVO map = underTest.emptyMap(10);
         map.getMap()[2][3] = 'H';
@@ -408,7 +405,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckAddObject_tooMuchWumpus_shouldReturnFalse() {
+    void testCheckAddObjectTooMuchWumpusShouldReturnFalse() {
 
         MapVO map = underTest.emptyMap(10);
         map.getMap()[2][3] = 'U';
@@ -420,7 +417,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckAddObject_invalidPosition_shouldReturnFalse() {
+    void testCheckAddObjectInvalidPositionShouldReturnFalse() {
 
         MapVO map = underTest.emptyMap(10);
         map.getMap()[2][3] = 'U';
@@ -431,7 +428,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckAddObject_invalidHeroPosition_shouldReturnFalse() {
+    void testCheckAddObjectInvalidHeroPositionShouldReturnFalse() {
 
         MapVO map = underTest.emptyMap(10);
         map.getMap()[2][3] = 'U';
@@ -442,7 +439,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckMap_validMap_shouldReturnTrue() {
+    void testCheckMapValidMapShouldReturnTrue() {
 
         MapVO validMap = underTest.emptyMap(10);
         validMap.getMap()[2][3] = 'H';
@@ -457,7 +454,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckMap_missingGold_shouldReturnFalse() {
+    void testCheckMapMissingGoldShouldReturnFalse() {
 
         MapVO mapMissingGold = underTest.emptyMap(10);
         mapMissingGold.getMap()[2][3] = 'H';
@@ -467,7 +464,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckMap_missingHero_shouldReturnFalse() {
+    void testCheckMapMissingHeroShouldReturnFalse() {
 
         MapVO mapMissingHero = underTest.emptyMap(10);
         mapMissingHero.getMap()[4][5] = 'G';
@@ -477,7 +474,7 @@ class EditMapTest {
     }
 
     @Test
-    void testCheckMap_incorrectWumpusCount_shouldReturnFalse() {
+    void testCheckMapIncorrectWumpusCountShouldReturnFalse() {
 
         MapVO mapIncorrectWumpusCount = underTest.emptyMap(10);
         mapIncorrectWumpusCount.getMap()[2][3] = 'H';
@@ -491,7 +488,7 @@ class EditMapTest {
     }
 
     @Test
-    void testPrintMenu_shouldPrintCorrectMenu() {
+    void testPrintMenuShouldPrintCorrectMenu() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outputStream));
 

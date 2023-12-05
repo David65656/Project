@@ -17,6 +17,30 @@ public class Play {
     private final int heroStartCoordinateX;
     private final int heroStartCoordinateY;
 
+    public MapVO getPlayedMap() {
+        return playedMap;
+    }
+
+    public void setPlayedMap(MapVO playedMap) {
+        this.playedMap = playedMap;
+    }
+
+    public Hero getPlayedHero() {
+        return playedHero;
+    }
+
+    public void setPlayedHero(Hero playedHero) {
+        this.playedHero = playedHero;
+    }
+
+    public int getHeroStartCoordinateX() {
+        return heroStartCoordinateX;
+    }
+
+    public int getHeroStartCoordinateY() {
+        return heroStartCoordinateY;
+    }
+
     /**
      * Constructs a Play object with the given MapVO and Hero, starting the game.
      *
@@ -33,8 +57,6 @@ public class Play {
         heroStartCoordinateY = playedHero.getCoordinateY();
         setHeroOnMap();
         setHeroArrowNumber();
-
-        playMenu();
     }
 
     /**
@@ -57,8 +79,6 @@ public class Play {
         setHeroOnMap();
 
         HeroMovements.setScore(score);
-
-        playMenu();
     }
 
     /**

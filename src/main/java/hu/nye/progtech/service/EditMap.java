@@ -31,12 +31,12 @@ public class EditMap {
         return editedHero;
     }
 
-    public static MapVO getEditedMap() {
-        return editedMap;
-    }
-
     public static void setEditedHero(Hero editedHero) {
         EditMap.editedHero = editedHero;
+    }
+
+    public static void setEditedMap(MapVO editedMap) {
+        EditMap.editedMap = editedMap;
     }
 
     public EditMap() {}

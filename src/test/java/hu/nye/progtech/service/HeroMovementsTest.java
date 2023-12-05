@@ -391,7 +391,7 @@ class HeroMovementsTest {
     }
 
     @Test
-    void testShootShouldReturnMapWithoutWumpusWhenShootIsSuccess() {
+    void testShootShouldReturnMapWithoutWumpusWhenShootIsSuccessToNorth() {
         Hero testHero = new Hero(3,3,Direction.North,1,false);
         char[][] testMap  = {
                 {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
@@ -410,6 +410,72 @@ class HeroMovementsTest {
         MapVO result = underTest.shoot(testHero,testMapVO);
 
         assertEquals('_', result.getMap()[1][2]);
+    }
+
+    @Test
+    void testShootShouldReturnMapWithoutWumpusWhenShootIsSuccessToSouth() {
+        Hero testHero = new Hero(3,3,Direction.South,1,false);
+        char[][] testMap  = {
+                {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', 'H', '_', '_', '_', 'G', '_', '_', 'W'},
+                {'W', '_', 'G', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', 'U', '_', 'U', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', 'P', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
+        };
+        MapVO testMapVO = new MapVO(10,10,testMap);
+
+        MapVO result = underTest.shoot(testHero,testMapVO);
+
+        assertEquals('_', result.getMap()[4][2]);
+    }
+
+    @Test
+    void testShootShouldReturnMapWithoutWumpusWhenShootIsSuccessToEast() {
+        Hero testHero = new Hero(3,3,Direction.East,1,false);
+        char[][] testMap  = {
+                {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', 'H', '_', 'U', '_', 'G', '_', '_', 'W'},
+                {'W', '_', 'G', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', 'U', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', 'P', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
+        };
+        MapVO testMapVO = new MapVO(10,10,testMap);
+
+        MapVO result = underTest.shoot(testHero,testMapVO);
+
+        assertEquals('_', result.getMap()[2][4]);
+    }
+
+    @Test
+    void testShootShouldReturnMapWithoutWumpusWhenShootIsSuccessToWest() {
+        Hero testHero = new Hero(3,3,Direction.West,1,false);
+        char[][] testMap  = {
+                {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', 'U', 'H', '_', '_', '_', 'G', '_', '_', 'W'},
+                {'W', '_', 'G', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', 'U', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', 'P', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
+        };
+        MapVO testMapVO = new MapVO(10,10,testMap);
+
+        MapVO result = underTest.shoot(testHero,testMapVO);
+
+        assertEquals('_', result.getMap()[2][1]);
     }
 
     @Test

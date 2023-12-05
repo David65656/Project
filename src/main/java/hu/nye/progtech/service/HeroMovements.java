@@ -32,24 +32,12 @@ public class HeroMovements {
         HeroMovements.score = score;
     }
 
-    public int getOldCoordinateX() {
-        return oldCoordinateX;
-    }
-
     public void setOldCoordinateX(int oldCoordinateX) {
         this.oldCoordinateX = oldCoordinateX;
     }
 
-    public int getOldCoordinateY() {
-        return oldCoordinateY;
-    }
-
     public void setOldCoordinateY(int oldCoordinateY) {
         this.oldCoordinateY = oldCoordinateY;
-    }
-
-    public Object getObject() {
-        return object;
     }
 
     public void setObject(Object object) {

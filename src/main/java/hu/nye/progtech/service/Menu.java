@@ -113,7 +113,8 @@ public class Menu {
                     database.closeDatabaseConnection();
 
                     try {
-                        new Play(map, hero);
+                        Play play = new Play(map, hero);
+                        play.playMenu();
                     } catch (NullPointerException e) {
                         System.out.println("\nHiba próbáld újra!\n");
                         new Menu();
@@ -146,7 +147,8 @@ public class Menu {
 
                     System.out.println("\nMentett pálya sikeresen betöltve!\n");
 
-                    new Play(loadMap, loadHero, startCoordinateX, startCoordinateY, score);
+                    Play play = new Play(loadMap, loadHero, startCoordinateX, startCoordinateY, score);
+                    play.playMenu();
                     break;
                 case 3:
                     EditMap editMap = new EditMap();
