@@ -27,9 +27,20 @@ public class EditMap {
     private static Hero editedHero;
     private static MapVO editedMap;
 
-    public EditMap() throws IOException, SQLException {
-        readSize();
+    public static Hero getEditedHero() {
+        return editedHero;
     }
+
+    public static MapVO getEditedMap() {
+        return editedMap;
+    }
+
+    public static void setEditedHero(Hero editedHero) {
+        EditMap.editedHero = editedHero;
+    }
+
+    public EditMap() {}
+
 
     /**
      * Reads and validates the size of the game map from user input.
@@ -412,6 +423,7 @@ public class EditMap {
             if (object.getType() == ObjectType.HERO && (map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != '_' &&
                     map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != 'G')) {
                 System.out.println("\nHiba! Hőst csak üres vagy arany mezőre rakhatsz!\n");
+                return false;
             }
         } catch (ArrayIndexOutOfBoundsException e) {
             objectRead();

@@ -29,6 +29,10 @@ public class Menu {
         return userName;
     }
 
+    public static void setUserName(String userName) {
+        Menu.userName = userName;
+    }
+
     /**
      * Gets the map ID.
      *
@@ -48,6 +52,10 @@ public class Menu {
         readUserName();
         printMenu();
         readChoice();
+    }
+
+    public Menu(int a) throws SQLException {
+
     }
 
     /**
@@ -141,7 +149,8 @@ public class Menu {
                     new Play(loadMap, loadHero, startCoordinateX, startCoordinateY, score);
                     break;
                 case 3:
-                    new EditMap();
+                    EditMap editMap = new EditMap();
+                    editMap.readSize();
                     break;
                 case 4:
                     System.out.println("\nSikeresen kilépett!\n");

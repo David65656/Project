@@ -32,6 +32,30 @@ public class HeroMovements {
         HeroMovements.score = score;
     }
 
+    public int getOldCoordinateX() {
+        return oldCoordinateX;
+    }
+
+    public void setOldCoordinateX(int oldCoordinateX) {
+        this.oldCoordinateX = oldCoordinateX;
+    }
+
+    public int getOldCoordinateY() {
+        return oldCoordinateY;
+    }
+
+    public void setOldCoordinateY(int oldCoordinateY) {
+        this.oldCoordinateY = oldCoordinateY;
+    }
+
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
+
     /**
      * Moves the hero in the specified direction and updates the game state accordingly.
      *
@@ -80,7 +104,6 @@ public class HeroMovements {
         checkWumpusGoldPit(map, newCoordinateX, newCoordinateY);
         newMap[oldCoordinateX - 1][oldCoordinateY - 1] = '_';
 
-
         if (object.getType() == ObjectType.GOLD && !hero.isHaveGold()) {
             newMap[object.getCoordinateX()][object.getCoordinateY()] = 'G';
         } else if (object.getType() == ObjectType.PIT) {
@@ -89,7 +112,6 @@ public class HeroMovements {
                 hero.setNumberOfArrows(hero.getNumberOfArrows() - 1);
             }
         }
-
         newMap[newCoordinateX - 1][newCoordinateY - 1] = 'H';
 
         return new MapVO(map.getRows(), map.getColumns(), newMap);
