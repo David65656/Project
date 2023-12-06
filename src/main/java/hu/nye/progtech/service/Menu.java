@@ -42,6 +42,10 @@ public class Menu {
         return mapID;
     }
 
+    public static void setMapID(int mapID) {
+        Menu.mapID = mapID;
+    }
+
     /**
      * Constructs a Menu object, reads the username, prints the menu, and reads the user's choice.
      *

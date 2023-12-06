@@ -36,11 +36,6 @@ class PlayTest {
     };
     private MapVO testMapVO = new MapVO(10,10, testMap);
 
-    private void provideInput(String data) {
-        testIn = new ByteArrayInputStream(data.getBytes());
-        System.setIn(testIn);
-    }
-
     @Before
     public void setUpOutput() {
         testOut = new ByteArrayOutputStream();
@@ -91,5 +86,10 @@ class PlayTest {
                 "Ön választása: " + System.getProperty("line.separator");;
 
         assertEquals(expectedMenu, outputStream.toString());
+    }
+
+    @Test
+    void testCheckHeroPositionShouldReturnTrueWhenHeroAtStartCoordinates() {
+        assertTrue(underTest.checkHeroPosition());
     }
 }

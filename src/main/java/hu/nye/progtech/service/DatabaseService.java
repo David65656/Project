@@ -21,6 +21,10 @@ public class DatabaseService {
     private MapVO readMap;
     private Hero readHero;
 
+    public MapVO getReadMap() {
+        return readMap;
+    }
+
     public DatabaseService() throws SQLException {}
 
     /**
@@ -464,7 +468,7 @@ public class DatabaseService {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                userSavedScore = resultSet.getInt("heroColumn");
+                userSavedScore = resultSet.getInt("userCurrentScore");
             }
         }
         return userSavedScore;
