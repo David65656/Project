@@ -6,10 +6,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 import java.io.*;
+import java.sql.SQLException;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 class EditMapTest {
 
@@ -486,7 +491,6 @@ class EditMapTest {
 
         assertFalse(underTest.checkMap(mapIncorrectWumpusCount));
     }
-
     @Test
     void testPrintMenuShouldPrintCorrectMenu() {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

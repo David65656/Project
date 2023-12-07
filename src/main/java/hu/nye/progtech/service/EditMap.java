@@ -35,10 +35,6 @@ public class EditMap {
         EditMap.editedHero = editedHero;
     }
 
-    public static void setEditedMap(MapVO editedMap) {
-        EditMap.editedMap = editedMap;
-    }
-
     public EditMap() {}
 
 
@@ -107,7 +103,7 @@ public class EditMap {
                 case 1:
                     try {
                         editedMap = addObject(map, objectRead());
-                    } catch (ArrayIndexOutOfBoundsException e) {
+                    } catch (Exception e) {
                         System.out.println("\nHiba! Próbáld újra!\n");
                         editedMap = addObject(map, objectRead());
                     }
@@ -122,7 +118,7 @@ public class EditMap {
                 case 2:
                     try {
                         editedMap = removeObject(map);
-                    } catch (IndexOutOfBoundsException e) {
+                    } catch (Exception e) {
                         System.out.println("\nHiba! Próbáld újra!\n");
                         editedMap = removeObject(map);
                     }
@@ -414,19 +410,15 @@ public class EditMap {
             return false;
         }
 
-        try {
-            if (object.getType() != ObjectType.HERO && map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != '_') {
-                System.out.println("\nHiba! Az adott helyen van már elem!\n");
-                return false;
-            }
+        if (object.getType() != ObjectType.HERO && map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != '_') {
+            System.out.println("\nHiba! Az adott helyen van már elem!\n");
+            return false;
+        }
 
-            if (object.getType() == ObjectType.HERO && (map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != '_' &&
-                    map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != 'G')) {
-                System.out.println("\nHiba! Hőst csak üres vagy arany mezőre rakhatsz!\n");
-                return false;
-            }
-        } catch (ArrayIndexOutOfBoundsException e) {
-            objectRead();
+        if (object.getType() == ObjectType.HERO && (map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != '_' &&
+                map.getMap()[object.getCoordinateX() - 1][object.getCoordinateY() - 1] != 'G')) {
+            System.out.println("\nHiba! Hőst csak üres vagy arany mezőre rakhatsz!\n");
+            return false;
         }
 
         return true;
