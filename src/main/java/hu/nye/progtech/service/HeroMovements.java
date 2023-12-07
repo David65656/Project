@@ -116,7 +116,7 @@ public class HeroMovements {
         if (map.getMap()[newCoordinateX - 1][newCoordinateY - 1] == 'U') {
             System.out.println("\nWumpuszra léptél és meghaltál!\n");
             score = 0;
-            new Menu();
+            System.exit(0);
         } else if (map.getMap()[newCoordinateX - 1][newCoordinateY - 1] == 'P') {
             object = new Object(ObjectType.PIT, newCoordinateX - 1, newCoordinateY - 1);
             System.out.println("\nVeremre léptél! Elvesztettél egy nyilat!\n");

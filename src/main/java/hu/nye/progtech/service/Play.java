@@ -17,6 +17,22 @@ public class Play {
     private final int heroStartCoordinateX;
     private final int heroStartCoordinateY;
 
+    public MapVO getPlayedMap() {
+        return playedMap;
+    }
+
+    public void setPlayedMap(MapVO playedMap) {
+        this.playedMap = playedMap;
+    }
+
+    public Hero getPlayedHero() {
+        return playedHero;
+    }
+
+    public void setPlayedHero(Hero playedHero) {
+        this.playedHero = playedHero;
+    }
+
     /**
      * Constructs a Play object with the given MapVO and Hero, starting the game.
      *
@@ -86,105 +102,11 @@ public class Play {
     }
 
     /**
-     * Prints the menu of available actions for the player.
-     */
-    public void printMenu() {
-        System.out.println("\nVálasszon az alábbiak közül: \n" +
-                "1. Előre lépés\n" +
-                "2. Balra fordulás\n" +
-                "3. Jobbra fordulás\n" +
-                "4. Lövés\n" +
-                "5. Arany felszedése\n" +
-                "6. Játék elhalasztás\n" +
-                "7. Feladás\n" +
-                "Ön választása: ");
-    }
-
-    /**
      * Checks if the hero is in the starting position.
      *
      * @return True if the hero is in the starting position, false otherwise.
      */
     public boolean checkHeroPosition() {
         return heroStartCoordinateX == playedHero.getCoordinateX() && heroStartCoordinateY == playedHero.getCoordinateY();
-    }
-
-    /**
-     * Manages the main gameplay loop, allowing the player to perform various actions.
-     *
-     * @throws SQLException If a database access error occurs.
-     * @throws IOException  If an I/O error occurs.
-     */
-    public void playMenu() throws SQLException, IOException {
-        Scanner scanner = new Scanner(System.in);
-        HeroMovements move = new HeroMovements();
-        int choice = 0;
-        int cnt = 0;
-
-        while (choice != 7) {
-            if (checkHeroPosition() && playedHero.isHaveGold()) {
-                System.out.println("\nGratulálok! Megnyerted a játékot! A játék során megtett lépések száma: " + cnt +
-                        "\nPontszámod: " + HeroMovements.getScore() + "\n");
-                DatabaseService database = new DatabaseService();
-                database.databaseConnection();
-                database.isPlayerInScoreTable();
-                database.printScoreTable();
-                database.closeDatabaseConnection();
-                choice = 7;
-            } else {
-                playedMap.mapPrint();
-                System.out.println(playedHero);
-                printMenu();
-
-                try {
-                    choice = scanner.nextInt();
-                } catch (InputMismatchException e) {
-                    scanner.next();
-                    playedMap.mapPrint();
-                    System.out.println(playedHero);
-                    printMenu();
-                }
-
-            }
-                switch (choice) {
-                    case 1:
-                        playedHero = move.step(playedHero, playedMap);
-                        playedMap = move.drawStepOnMap(playedMap, playedHero.getCoordinateX(), playedHero.getCoordinateY(), playedHero);
-                        cnt++;
-                        break;
-                    case 2:
-                        move.turnLeft(playedHero);
-                        break;
-                    case 3:
-                        move.turnRight(playedHero);
-                        break;
-                    case 4:
-                        if (playedHero.getNumberOfArrows() == 0) {
-                            System.out.println("\nNincs nyilad, ezért nem tudsz lőni!\n");
-                        } else {
-                            playedMap = move.shoot(playedHero, playedMap);
-                        }
-                        break;
-                    case 5:
-                        move.pickupGold(playedHero, playedMap);
-                        break;
-                    case 6:
-                        DatabaseService database = new DatabaseService();
-                        database.databaseConnection();
-                        database.sendSavedGameToDatabase(playedMap, playedHero);
-                        database.sendPlayerScoreToDatabase();
-                        System.out.println("\nSikeresen kilépett! Pálya sikeresen elmentve!\n");
-                        database.closeDatabaseConnection();
-                        choice = 7;
-                        new Menu().printMenu();
-                        break;
-                    case 7:
-                        System.out.println("\nSikeresen kilépett!\n");
-                        new Menu().printMenu();
-                        break;
-                    default:
-                        System.out.println("\nHiba! Próbálja újra!\n");
-                }
-        }
     }
 }

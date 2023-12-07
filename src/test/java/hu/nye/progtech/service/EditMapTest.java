@@ -6,15 +6,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 
 import java.io.*;
-import java.sql.SQLException;
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
+import java.util.NoSuchElementException;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 class EditMapTest {
 
@@ -490,23 +485,5 @@ class EditMapTest {
         underTest.setEditedHero(testHero);
 
         assertFalse(underTest.checkMap(mapIncorrectWumpusCount));
-    }
-    @Test
-    void testPrintMenuShouldPrintCorrectMenu() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStream));
-
-        underTest.printMenu();
-
-        System.setOut(System.out);
-
-        String expectedMenu = "\nVálasszon az alábbiak közül: \n" +
-                "1. Elem hozzáadása\n" +
-                "2. Elem eltávolítása\n" +
-                "3. Kilépés pálya mentése nélkül\n" +
-                "4. Kilépés pálya mentésével\n" +
-                "Ön választása: " + System.getProperty("line.separator");;
-
-        assertEquals(expectedMenu, outputStream.toString());
     }
 }

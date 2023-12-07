@@ -37,118 +37,12 @@ public class EditMap {
 
     public EditMap() {}
 
-
-    /**
-     * Reads and validates the size of the game map from user input.
-     * <p>
-     * This method prompts the user to enter the size of the game map within the range of 6 to 20 (inclusive).
-     * It continues to ask for input until a valid size is provided. Once a valid size is obtained,
-     * it creates an empty map of the specified size, prints it, and proceeds to the map editing menu.
-     *
-     * @throws IOException If an I/O error occurs.
-     * @throws SQLException If a database access error occurs.
-     */
-    public void readSize() throws IOException, SQLException {
-        Scanner scanner = new Scanner(System.in);
-        int size = 0;
-        while (!sizeCheck(size)) {
-            System.out.println("\nAdja meg a pálya méretét (6<=N<=20): ");
-
-            try {
-                size = scanner.nextInt();
-            } catch (InputMismatchException e) {
-                scanner.next();
-                System.out.println("\nAdja meg a pálya méretét (6<=N<=20): ");
-            }
-
-            if (sizeCheck(size)) {
-                MapVO empty = emptyMap(size);
-                empty.mapPrint();
-                menu(empty);
-            } else {
-                System.out.println("\nHiba! Próbálja újra!\n");
-            }
-        }
+    public static MapVO getEditedMap() {
+        return editedMap;
     }
 
-    /**
-     * Displays the menu for editing a game map and handles user input.
-     * <p>
-     * This method presents a menu with options to add objects, remove objects, exit without saving,
-     * or exit and save the edited map. It continuously prompts the user for input until the user chooses to exit.
-     * Depending on the user's choice, it invokes corresponding methods to modify the map and updates the edited
-     * hero's arrow count. If the user chooses to save the map, it connects to the database and stores the edited
-     * hero and map information. After successful completion, it prints a success message, displays the edited hero,
-     * and returns to the main menu.
-     *
-     * @param map The map to be edited.
-     * @throws IOException If an I/O error occurs.
-     * @throws SQLException If a database access error occurs.
-     */
-    public void menu(MapVO map) throws IOException, SQLException {
-        int choice = 0;
-        Scanner scanner = new Scanner(System.in);
-
-        while (choice != 3) {
-            printMenu();
-
-            try {
-                choice = scanner.nextInt();
-            } catch (InputMismatchException e) {
-                scanner.next();
-                printMenu();
-            }
-
-            switch (choice) {
-                case 1:
-                    try {
-                        editedMap = addObject(map, objectRead());
-                    } catch (Exception e) {
-                        System.out.println("\nHiba! Próbáld újra!\n");
-                        editedMap = addObject(map, objectRead());
-                    }
-                    map.mapPrint();
-
-                    if (editedHero == null) {
-                        System.out.println("\nNincs hős a pályán!\n");
-                    } else {
-                        System.out.println(editedHero);
-                    }
-                    break;
-                case 2:
-                    try {
-                        editedMap = removeObject(map);
-                    } catch (Exception e) {
-                        System.out.println("\nHiba! Próbáld újra!\n");
-                        editedMap = removeObject(map);
-                    }
-                    map.mapPrint();
-                    break;
-                case 3:
-                    System.out.println("\nSikeresen kilépett!\n");
-                    new Menu();
-                    break;
-                case 4:
-                    if (checkMap(map)) {
-                        editedHero.setNumberOfArrows(wumpusCount(map));
-
-                        DatabaseService database = new DatabaseService();
-                        database.databaseConnection();
-                        database.sendEditedHeroToDatabase(editedHero);
-                        int heroID = database.getHeroIDFromDatabase(editedHero);
-                        database.sendEditedMapToDatabase(editedMap, heroID);
-                        database.closeDatabaseConnection();
-                        System.out.println("\nSikeresen kilépett! Pálya sikeresen elmentve!\n" + editedHero);
-                        new Menu();
-                        choice = 3;
-                    } else {
-                        System.out.println("\nHiba! Pálya mentése nem sikerült!\n");
-                    }
-                    break;
-                default:
-                    System.out.println("\nHiba! Próbálja újra!\n");
-            }
-        }
+    public static void setEditedMap(MapVO editedMap) {
+        EditMap.editedMap = editedMap;
     }
 
     /**
@@ -179,21 +73,6 @@ public class EditMap {
         }
 
         return true;
-    }
-
-    /**
-     * Prints the menu options for editing the game map.
-     * <p>
-     * This method displays a menu with numbered options for adding and removing elements from the game map,
-     * as well as options for exiting the editing process with or without saving changes.
-     */
-    public void printMenu() {
-        System.out.println("\nVálasszon az alábbiak közül: \n" +
-                "1. Elem hozzáadása\n" +
-                "2. Elem eltávolítása\n" +
-                "3. Kilépés pálya mentése nélkül\n" +
-                "4. Kilépés pálya mentésével\n" +
-                "Ön választása: ");
     }
 
     /**

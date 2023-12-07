@@ -3,6 +3,7 @@ package hu.nye.progtech.service;
 import hu.nye.progtech.model.Direction;
 import hu.nye.progtech.model.Hero;
 import hu.nye.progtech.model.MapVO;
+import hu.nye.progtech.model.MenuVO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,8 +52,8 @@ class DatabaseServiceTest {
         }
 
         statement.close();
-        Menu.setUserName("testUser");
-        Menu.setMapID(1);
+        MenuVO.setUserName("testUser");
+        MenuVO.setMapID(1);
         underTest.deleteUnfinishedGame();
         underTest.closeDatabaseConnection();
     }
@@ -103,14 +104,14 @@ class DatabaseServiceTest {
 
     @Test
     void testPrintScoreTableShouldPrintScoreTable() throws Exception {
-        Menu.setMapID(1);
+        MenuVO.setMapID(1);
         underTest.printScoreTable();
     }
 
     @Test
     void testSendPlayerScoreToDatabaseShouldSavePlayerScore() throws Exception {
-        Menu.setUserName("testUser");
-        Menu.setMapID(1);
+        MenuVO.setUserName("testUser");
+        MenuVO.setMapID(1);
         HeroMovements.setScore(10);
 
         underTest.databaseConnection();
@@ -131,8 +132,8 @@ class DatabaseServiceTest {
 
     @Test
     void testUpdatePlayerScoreInDatabaseShouldUpdateExistingScore() throws Exception {
-        Menu.setUserName("testUser");
-        Menu.setMapID(1);
+        MenuVO.setUserName("testUser");
+        MenuVO.setMapID(1);
         HeroMovements.setScore(10);
 
         underTest.databaseConnection();
@@ -158,8 +159,8 @@ class DatabaseServiceTest {
 
     @Test
     void testIsPlayerInScoreTableShouldSaveNewScoreOrUpdateExistingScore() throws Exception {
-        Menu.setUserName("testUser");
-        Menu.setMapID(1);
+        MenuVO.setUserName("testUser");
+        MenuVO.setMapID(1);
         HeroMovements.setScore(10);
 
         underTest.databaseConnection();
@@ -235,8 +236,8 @@ class DatabaseServiceTest {
 
         Hero testHero = new Hero(4, 5, Direction.North, 0, false);
 
-        Menu.setUserName("testUser");
-        Menu.setMapID(1);
+        MenuVO.setUserName("testUser");
+        MenuVO.setMapID(1);
         HeroMovements.setScore(10);
 
         underTest.databaseConnection();
@@ -270,8 +271,8 @@ class DatabaseServiceTest {
 
         statement.close();
 
-        Menu.setUserName("testUser");
-        Menu.setMapID(1);
+        MenuVO.setUserName("testUser");
+        MenuVO.setMapID(1);
         MapVO result = underTest.loadSavedMapFromDatabase("testUser");
 
         assertEquals("WWWWWW#W____W#W__G_W#WP___W#WU__HW#WWWWWW", underTest.convertMap(result));
@@ -293,8 +294,8 @@ class DatabaseServiceTest {
 
         statement.close();
 
-        Menu.setUserName("testUser");
-        Menu.setMapID(1);
+        MenuVO.setUserName("testUser");
+        MenuVO.setMapID(1);
         Hero result = underTest.loadSavedHeroFromDatabase("testUser");
 
         assertEquals(5, result.getCoordinateX());
@@ -321,8 +322,8 @@ class DatabaseServiceTest {
 
         statement.close();
 
-        Menu.setUserName("testUser");
-        Menu.setMapID(1);
+        MenuVO.setUserName("testUser");
+        MenuVO.setMapID(1);
         Hero hero = underTest.loadSavedHeroFromDatabase("testUser");
         int result = underTest.loadSavedHeroStartCoordinateXFromDatabase(hero);
 
@@ -345,8 +346,8 @@ class DatabaseServiceTest {
 
         statement.close();
 
-        Menu.setUserName("testUser");
-        Menu.setMapID(1);
+        MenuVO.setUserName("testUser");
+        MenuVO.setMapID(1);
         Hero hero = underTest.loadSavedHeroFromDatabase("testUser");
         int result = underTest.loadSavedHeroStartCoordinateYFromDatabase(hero);
 
@@ -369,8 +370,8 @@ class DatabaseServiceTest {
 
         statement.close();
 
-        Menu.setUserName("testUser");
-        Menu.setMapID(1);
+        MenuVO.setUserName("testUser");
+        MenuVO.setMapID(1);
 
         int result = underTest.loadUserSavedScoreFromDatabase();
 
@@ -467,7 +468,7 @@ class DatabaseServiceTest {
         assertEquals(5, result.getCoordinateX());
         assertEquals(5, result.getCoordinateY());
         assertEquals(Direction.North, result.getViewingDirection());
-        assertEquals(false, result.isHaveGold());
+        assertFalse(result.isHaveGold());
         assertEquals(0, result.getNumberOfArrows());
 
         Statement statementDelete = connection.createStatement();
@@ -499,7 +500,7 @@ class DatabaseServiceTest {
     void testSendEditedMapToDatabaseShouldSendEditedMapToDatabase() throws Exception {
         underTest.databaseConnection();
 
-        Menu.setUserName("testUser");
+        MenuVO.setUserName("testUser");
         char[][] testMap  = {
                 {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
                 {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
@@ -577,7 +578,7 @@ class DatabaseServiceTest {
     void testSendEditedHeroToDatabase() throws Exception {
         underTest.databaseConnection();
 
-        Menu.setUserName("testUser");
+        MenuVO.setUserName("testUser");
 
         Hero testHero = new Hero(5, 5, Direction.North, 0, false);
 

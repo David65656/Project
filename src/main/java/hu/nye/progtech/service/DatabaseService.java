@@ -10,6 +10,7 @@ import java.sql.Statement;
 import hu.nye.progtech.model.Direction;
 import hu.nye.progtech.model.Hero;
 import hu.nye.progtech.model.MapVO;
+import hu.nye.progtech.model.MenuVO;
 
 /**
  * The `DatabaseService` class provides methods to interact with a MySQL database for a Wumpus game.
@@ -103,7 +104,7 @@ public class DatabaseService {
         String query = "DELETE FROM savedgametable WHERE userName=?;";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, Menu.getUserName());
+            preparedStatement.setString(1, MenuVO.getUserName());
             if (preparedStatement.executeUpdate() != 0) {
                 System.out.println("Mentett játék törölve!");
             }
@@ -202,7 +203,7 @@ public class DatabaseService {
         String query = "SELECT userName, score FROM scoretable WHERE mapID=? ORDER BY score DESC;";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, Menu.getMapID());
+            preparedStatement.setInt(1, MenuVO.getMapID());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
@@ -224,9 +225,9 @@ public class DatabaseService {
         String query = "INSERT INTO scoretable VALUES (?,?,?);";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, Menu.getUserName());
+            preparedStatement.setString(1, MenuVO.getUserName());
             preparedStatement.setInt(2, HeroMovements.getScore());
-            preparedStatement.setInt(3, Menu.getMapID());
+            preparedStatement.setInt(3, MenuVO.getMapID());
 
             preparedStatement.executeUpdate();
         }
@@ -246,8 +247,8 @@ public class DatabaseService {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setInt(1, HeroMovements.getScore());
-            preparedStatement.setInt(2, Menu.getMapID());
-            preparedStatement.setString(3, Menu.getUserName());
+            preparedStatement.setInt(2, MenuVO.getMapID());
+            preparedStatement.setString(3, MenuVO.getUserName());
 
             preparedStatement.executeUpdate();
         }
@@ -268,8 +269,8 @@ public class DatabaseService {
         Statement statement = connection.createStatement();
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setInt(1, Menu.getMapID());
-            preparedStatement.setString(2, Menu.getUserName());
+            preparedStatement.setInt(1, MenuVO.getMapID());
+            preparedStatement.setString(2, MenuVO.getUserName());
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -306,8 +307,8 @@ public class DatabaseService {
         String query = "INSERT INTO savedgametable VALUES (?,?,?,?,?,?,?,?,?);";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1, Menu.getUserName());
-            preparedStatement.setInt(2, Menu.getMapID());
+            preparedStatement.setString(1, MenuVO.getUserName());
+            preparedStatement.setInt(2, MenuVO.getMapID());
             preparedStatement.setString(3, convertMap(map));
             preparedStatement.setInt(4, hero.getCoordinateX());
             preparedStatement.setString(5, convertCharToString(hero));
@@ -463,7 +464,7 @@ public class DatabaseService {
         String query = "SELECT userCurrentScore FROM savedgametable WHERE userName=?;";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
-            preparedStatement.setString(1,  Menu.getUserName());
+            preparedStatement.setString(1,  MenuVO.getUserName());
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -589,7 +590,7 @@ public class DatabaseService {
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, convertMap(map));
-            preparedStatement.setString(2, Menu.getUserName());
+            preparedStatement.setString(2, MenuVO.getUserName());
             preparedStatement.setInt(3, heroID);
 
             preparedStatement.executeUpdate();

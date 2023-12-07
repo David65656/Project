@@ -67,29 +67,45 @@ class PlayTest {
     }
 
     @Test
-    void testPrintMenuShouldPrintCorrectMenu() {
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(outputStream));
-
-        underTest.printMenu();
-
-        System.setOut(System.out);
-
-        String expectedMenu = "\nVálasszon az alábbiak közül: \n" +
-                "1. Előre lépés\n" +
-                "2. Balra fordulás\n" +
-                "3. Jobbra fordulás\n" +
-                "4. Lövés\n" +
-                "5. Arany felszedése\n" +
-                "6. Játék elhalasztás\n" +
-                "7. Feladás\n" +
-                "Ön választása: " + System.getProperty("line.separator");;
-
-        assertEquals(expectedMenu, outputStream.toString());
+    void testCheckHeroPositionShouldReturnTrueWhenHeroAtStartCoordinates() {
+        assertTrue(underTest.checkHeroPosition());
     }
 
     @Test
-    void testCheckHeroPositionShouldReturnTrueWhenHeroAtStartCoordinates() {
-        assertTrue(underTest.checkHeroPosition());
+    void testGetPlayedMapShouldGivePlayedMap() {
+        underTest.getPlayedMap().mapPrint();
+    }
+
+    @Test
+    void testSetPlayedMapShouldSetPlayedMap() {
+        char[][] testMap = {
+                {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', 'U', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', 'U', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', '_', '_', '_', '_', '_', '_', '_', '_', 'W'},
+                {'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W', 'W'}
+        };
+        MapVO map = new MapVO(10,10,testMap);
+        underTest.setPlayedMap(map);
+
+        assertEquals(map, underTest.getPlayedMap());
+    }
+
+    @Test
+    void testGetPlayedHeroShouldGivePlayedHero() {
+        System.out.println(underTest.getPlayedHero());
+    }
+
+    @Test
+    void testSetPlayedHeroShouldSetPlayedHero() {
+        Hero hero = new Hero(2,3,Direction.North,0,false);
+        underTest.setPlayedHero(hero);
+
+        assertEquals(hero,underTest.getPlayedHero());
     }
 }
